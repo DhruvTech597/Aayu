@@ -545,10 +545,6 @@ const SmartHealthCard = () => {
                   </ul>
                 </div>
                 
-                <Button variant="outline" className="w-full text-xs py-3 group">
-                  Generate Full AI Report
-                  <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                </Button>
               </div>
             </Card>
           </div>

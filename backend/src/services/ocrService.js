@@ -26,8 +26,9 @@ export const extractTextFromBuffer = async (buffer, mimetype = "", originalName 
   const isPdf = mimetype === "application/pdf" || originalName.toLowerCase().endsWith(".pdf");
   if (isPdf) {
     try {
-      const data = await pdfParse(buffer);
-      return data.text.trim();
+      const parser = new pdfParse.PDFParse({ data: new Uint8Array(buffer) });
+      const data = await parser.getText();
+      return data.text?.trim() || "";
     } catch (error) {
       console.error("PDF Parsing Error:", error);
       throw new Error("Failed to extract text from PDF report");
@@ -51,8 +52,9 @@ export const extractTextFromFile = async (fileUrl) => {
     try {
       const response = await axios.get(fileUrl, { responseType: "arraybuffer" });
       const buffer = Buffer.from(response.data);
-      const data = await pdfParse(buffer);
-      return data.text.trim();
+      const parser = new pdfParse.PDFParse({ data: new Uint8Array(buffer) });
+      const data = await parser.getText();
+      return data.text?.trim() || "";
     } catch (error) {
       console.error("PDF Parsing Error:", error);
       throw new Error("Failed to extract text from PDF report");
