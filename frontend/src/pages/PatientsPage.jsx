@@ -16,9 +16,11 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { Card, Button, Badge, Skeleton } from '../components/ui/CommonUI';
 import { patientApi } from '../services/apiService';
+import { useAuth } from '../context/AuthContext';
 
 const PatientsPage = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [patients, setPatients] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
@@ -57,13 +59,15 @@ const PatientsPage = () => {
             </h1>
             <p className="text-slate-400 font-medium text-sm">Manage and access all clinical records in the system.</p>
           </div>
-          <Button 
-            className="gap-2 px-6 py-3" 
-            onClick={() => navigate('/patients/register')}
-          >
-            <UserPlus className="w-5 h-5" />
-            Onboard New Patient
-          </Button>
+          {user?.role !== 'doctor' && (
+            <Button 
+              className="gap-2 px-6 py-3" 
+              onClick={() => navigate('/patients/register')}
+            >
+              <UserPlus className="w-5 h-5" />
+              Onboard New Patient
+            </Button>
+          )}
         </div>
 
         {/* Filter & Search Hub */}

@@ -92,13 +92,15 @@ const Dashboard = () => {
               <Bell className="w-5 h-5 group-hover:rotate-12 transition-transform" />
               <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-aayu-navy-deep" />
             </Button>
-            <Button 
-              className="gap-2 px-6 py-3" 
-              onClick={() => navigate('/patients/register')}
-            >
-              <Plus className="w-5 h-5" />
-              Register Patient
-            </Button>
+            {user?.role !== 'doctor' && (
+              <Button 
+                className="gap-2 px-6 py-3" 
+                onClick={() => navigate('/patients/register')}
+              >
+                <Plus className="w-5 h-5" />
+                Register Patient
+              </Button>
+            )}
           </div>
         </div>
 
