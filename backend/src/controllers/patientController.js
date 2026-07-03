@@ -24,6 +24,7 @@ export const createPatient = asyncHandler(async (req, res) => {
   }
 
   const cleanedAbhaId = abhaId && abhaId.trim() !== "" ? abhaId.trim() : undefined;
+  const cleanedDoctor = assignedDoctor && assignedDoctor.trim() !== "" ? assignedDoctor.trim() : undefined;
 
   if (cleanedAbhaId) {
     const existedAbha = await Patient.findOne({ abhaId: cleanedAbhaId });
@@ -44,7 +45,7 @@ export const createPatient = asyncHandler(async (req, res) => {
     emergencyContact,
     address,
     createdByClinic: req.user?._id,
-    assignedDoctor,
+    assignedDoctor: cleanedDoctor,
   });
 
   // Provision user portal credentials
@@ -184,6 +185,9 @@ export const updatePatient = asyncHandler(async (req, res) => {
 
   if (updates.abhaId !== undefined) {
     updates.abhaId = updates.abhaId && updates.abhaId.trim() !== "" ? updates.abhaId.trim() : undefined;
+  }
+  if (updates.assignedDoctor !== undefined) {
+    updates.assignedDoctor = updates.assignedDoctor && updates.assignedDoctor.trim() !== "" ? updates.assignedDoctor.trim() : undefined;
   }
 
   const patient = await Patient.findByIdAndUpdate(

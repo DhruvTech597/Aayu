@@ -275,7 +275,13 @@ const ReceptionistDashboardPage = () => {
       fetchDashboardData();
     } catch (err) {
       console.error(err);
-      const errMsg = err.response?.data?.message || "Registration failed.";
+      let errMsg = err.response?.data?.message || "Registration failed.";
+      if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+        const errorDetails = err.response.data.errors.map(e => Object.values(e)[0]).filter(Boolean).join(", ");
+        if (errorDetails) {
+          errMsg = `${errMsg}: ${errorDetails}`;
+        }
+      }
       setRegisterError(errMsg);
       toast.error(errMsg);
     } finally {

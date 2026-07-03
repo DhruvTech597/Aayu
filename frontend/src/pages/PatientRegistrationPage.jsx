@@ -65,9 +65,16 @@ const PatientRegistration = () => {
       setSubmitStatus({ type: 'success', message: 'Patient registered successfully!' });
       setTimeout(() => navigate('/patients'), 2000);
     } catch (error) {
+      let errMsg = error.response?.data?.message || 'Failed to register patient';
+      if (error.response?.data?.errors && Array.isArray(error.response.data.errors)) {
+        const errorDetails = error.response.data.errors.map(e => Object.values(e)[0]).filter(Boolean).join(", ");
+        if (errorDetails) {
+          errMsg = `${errMsg}: ${errorDetails}`;
+        }
+      }
       setSubmitStatus({ 
         type: 'error', 
-        message: error.response?.data?.message || 'Failed to register patient' 
+        message: errMsg 
       });
     } finally {
       setIsSubmitting(false);

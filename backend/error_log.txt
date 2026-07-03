@@ -1,0 +1,7 @@
+[SERVER ERROR] 2026-07-03T13:28:59.065Z - Status: 409 - Path: /api/v1/users/register
+Message: User with this email already exists
+Stack: Error: User with this email already exists
+    at file:///C:/Users/Asus/OneDrive/Desktop/Aayu/backend/src/controllers/userController.js:29:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+Errors: []
+
