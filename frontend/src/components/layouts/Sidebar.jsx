@@ -59,52 +59,57 @@ const Sidebar = ({ onClose }) => {
 
   return (
     <motion.div 
-      className="fixed left-0 top-0 h-screen w-64 glass-card border-r border-white/10 z-50 flex flex-col"
+      initial={{ x: -50, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      className="fixed left-0 top-0 h-screen w-64 bg-aayu-surface border-r border-aayu-border z-50 flex flex-col"
     >
       <div className="p-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-aayu-emerald rounded-xl flex items-center justify-center shadow-lg shadow-aayu-emerald/20">
-            <Sparkles className="text-white w-6 h-6" />
+          <div className="w-9 h-9 bg-aayu-emerald rounded-xl flex items-center justify-center shadow-lg shadow-aayu-emerald/25">
+            <Sparkles className="text-white w-5 h-5" />
           </div>
-          <h1 className="text-2xl font-bold ai-text-gradient">
+          <h1 className="text-xl font-black ai-text-gradient tracking-widest uppercase">
             Aayu
           </h1>
         </div>
         {onClose && (
           <button 
             onClick={onClose} 
-            className="p-1 rounded-md text-slate-400 hover:text-white lg:hidden"
+            className="p-1 rounded-md text-aayu-text-secondary hover:text-aayu-text-primary lg:hidden cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         )}
       </div>
 
-      <nav className="flex-1 px-4 py-6 space-y-2">
-        {menuItems.map((item) => (
-          <Link 
-            key={item.path} 
-            to={item.path}
-            onClick={() => onClose && onClose()}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group ${
-              location.pathname === item.path 
-                ? 'bg-aayu-emerald/10 text-aayu-emerald border border-aayu-emerald/20 shadow-inner' 
-                : 'text-slate-400 hover:bg-white/5 hover:text-white'
-            }`}
-          >
-            <item.icon className={`w-5 h-5 transition-colors ${location.pathname === item.path ? 'text-aayu-emerald' : 'group-hover:text-white'}`} />
-            <span className="font-semibold text-sm">{item.label}</span>
-          </Link>
-        ))}
+      <nav className="flex-1 px-4 py-4 space-y-1.5 overflow-y-auto">
+        {menuItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <Link 
+              key={item.path} 
+              to={item.path}
+              onClick={() => onClose && onClose()}
+              className={`flex items-center gap-3.5 px-4 py-3.5 rounded-xl transition-all duration-300 group ${
+                isActive 
+                  ? 'bg-aayu-emerald/10 text-aayu-emerald border border-aayu-emerald/15 shadow-inner font-bold' 
+                  : 'text-aayu-text-secondary hover:bg-white/[0.03] hover:text-aayu-text-primary'
+              }`}
+            >
+              <item.icon className={`w-4.5 h-4.5 transition-colors ${isActive ? 'text-aayu-emerald' : 'text-slate-500 group-hover:text-aayu-text-primary'}`} />
+              <span className="text-xs font-semibold uppercase tracking-wider">{item.label}</span>
+            </Link>
+          );
+        })}
       </nav>
 
-      <div className="p-4 border-t border-white/10">
+      <div className="p-4 border-t border-aayu-border">
         <button 
           onClick={logout}
-          className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-300 group"
+          className="flex items-center gap-3.5 px-4 py-3.5 w-full rounded-xl text-aayu-text-secondary hover:bg-red-500/10 hover:text-red-500 transition-all duration-300 group cursor-pointer"
         >
-          <LogOut className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          <span className="font-semibold text-sm">Logout</span>
+          <LogOut className="w-4.5 h-4.5 group-hover:translate-x-1 transition-transform" />
+          <span className="text-xs font-bold uppercase tracking-wider">Logout Session</span>
         </button>
       </div>
     </motion.div>

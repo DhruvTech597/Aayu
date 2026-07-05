@@ -6,7 +6,7 @@ export const Card = ({ children, className, ...props }) => (
   <motion.div
     whileHover={{ y: -4, transition: { duration: 0.2 } }}
     className={cn(
-      "glass-card rounded-2xl p-6 border border-white/10 shadow-xl relative overflow-hidden group",
+      "glass-card rounded-2xl p-6 border border-aayu-border shadow-xl relative overflow-hidden group",
       className
     )}
     {...props}
@@ -17,24 +17,24 @@ export const Card = ({ children, className, ...props }) => (
 
 export const Button = ({ children, variant = 'primary', className, size = 'md', ...props }) => {
   const variants = {
-    primary: "bg-aayu-emerald hover:bg-aayu-emerald-light text-white shadow-lg shadow-aayu-emerald/20",
-    secondary: "bg-white/5 hover:bg-white/10 text-white border border-white/10 backdrop-blur-md",
-    danger: "bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20",
-    ghost: "hover:bg-white/5 text-slate-400 hover:text-white transition-colors duration-200",
+    primary: "bg-aayu-emerald hover:bg-aayu-emerald-light text-white shadow-lg shadow-aayu-emerald/25 hover:shadow-aayu-emerald/40",
+    secondary: "bg-white/5 hover:bg-white/10 text-aayu-text-primary border border-aayu-border backdrop-blur-md hover:border-aayu-emerald/30",
+    danger: "bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20",
+    ghost: "hover:bg-white/5 text-aayu-text-secondary hover:text-aayu-text-primary transition-colors duration-200",
     outline: "border border-aayu-emerald/30 text-aayu-emerald hover:bg-aayu-emerald/10",
   };
 
   const sizes = {
-    sm: "px-3 py-1.5 text-xs",
-    md: "px-4 py-2 text-sm",
-    lg: "px-6 py-3 text-base",
+    sm: "px-3.5 py-2 text-xs font-semibold tracking-wider uppercase rounded-lg",
+    md: "px-5 py-3 text-xs font-black tracking-widest uppercase rounded-xl",
+    lg: "px-7 py-4 text-sm font-black tracking-widest uppercase rounded-2xl",
   };
 
   return (
     <motion.button
-      whileTap={{ scale: 0.97 }}
+      whileTap={{ scale: 0.96 }}
       className={cn(
-        "rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2 active:scale-95",
+        "font-sans transition-all duration-300 flex items-center justify-center gap-2 active:scale-95 cursor-pointer",
         variants[variant],
         sizes[size],
         className
@@ -52,14 +52,18 @@ export const Input = forwardRef(({ label, error, type, ...props }, ref) => {
   const inputType = isPassword ? (showPassword ? 'text' : 'password') : type;
 
   return (
-    <div className="space-y-2 w-full">
-      {label && <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider ml-1">{label}</label>}
+    <div className="space-y-2 w-full text-left">
+      {label && (
+        <label className="text-[10px] font-bold text-aayu-text-secondary uppercase tracking-widest ml-1">
+          {label}
+        </label>
+      )}
       <div className="relative group">
         <input
           ref={ref}
           type={inputType}
           className={cn(
-            "w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-2.5 text-white outline-none transition-all group-focus-within:border-aayu-emerald/50 group-focus-within:ring-1 group-focus-within:ring-aayu-emerald/50",
+            "w-full bg-white/[0.02] border border-aayu-border rounded-xl px-4 py-3.5 text-xs text-aayu-text-primary outline-none transition-all group-focus-within:border-aayu-emerald/60 group-focus-within:ring-1 group-focus-within:ring-aayu-emerald/60 font-semibold placeholder-slate-500",
             isPassword && "pr-12",
             error && "border-red-500/50 focus:border-red-500/50"
           )}
@@ -69,7 +73,7 @@ export const Input = forwardRef(({ label, error, type, ...props }, ref) => {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 hover:bg-white/5 rounded-lg text-slate-400 hover:text-white transition-colors duration-200"
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1.5 hover:bg-white/5 rounded-lg text-slate-500 hover:text-aayu-text-primary transition-colors duration-200 cursor-pointer"
           >
             {showPassword ? (
               <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -84,7 +88,7 @@ export const Input = forwardRef(({ label, error, type, ...props }, ref) => {
           </button>
         )}
       </div>
-      {error && <p className="text-[10px] font-medium text-red-400 ml-1 uppercase tracking-tight">{error}</p>}
+      {error && <p className="text-[10px] font-medium text-red-500 ml-1 uppercase tracking-tight">{error}</p>}
     </div>
   );
 });
@@ -92,15 +96,15 @@ Input.displayName = 'Input';
 
 export const Badge = ({ children, variant = 'default', className }) => {
   const variants = {
-    default: "bg-white/10 text-slate-400 border border-white/10",
+    default: "bg-white/10 text-aayu-text-secondary border border-aayu-border",
     success: "bg-aayu-emerald/10 text-aayu-emerald border border-aayu-emerald/20",
     warning: "bg-aayu-saffron/10 text-aayu-saffron border border-aayu-saffron/20",
-    danger: "bg-red-500/10 text-red-400 border border-red-500/20",
+    danger: "bg-red-500/10 text-red-500 border border-red-500/20",
     ai: "bg-aayu-cyan/10 text-aayu-cyan border border-aayu-cyan/20",
   };
 
   return (
-    <span className={cn("px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider", variants[variant], className)}>
+    <span className={cn("px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest", variants[variant], className)}>
       {children}
     </span>
   );

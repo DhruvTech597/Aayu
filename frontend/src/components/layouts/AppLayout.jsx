@@ -67,7 +67,7 @@ const AppLayout = () => {
         return [{
           id: `report-${report._id}`,
           type: 'report',
-          title: `${report.reportType || 'Report'} needs review`,
+          title: `${report.reportType || 'Report'} Review Required`,
           detail: `${abnormal.length} abnormal value${abnormal.length === 1 ? '' : 's'} for ${report.patientId?.fullName || report.parsedData?.patientName || 'a patient'}`,
           date: report.createdAt,
           path: '/reports',
@@ -82,7 +82,7 @@ const AppLayout = () => {
         return [{
           id: `appointment-${appointment._id}`,
           type: 'appointment',
-          title: 'Upcoming appointment',
+          title: 'Upcoming Appointment',
           detail: `${appointment.patientId?.fullName || 'Patient'} on ${appointmentDate.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}`,
           date: appointment.appointmentDate,
           path: appointmentPath,
@@ -99,14 +99,14 @@ const AppLayout = () => {
             return [{
               id: `patient-${patient._id}`,
               type: 'patient',
-              title: 'New Patient Registered',
-              detail: `${patient.fullName} (${patient.phone}) self-registered. Click to verify.`,
+              title: 'New Patient Onboarded',
+              detail: `${patient.fullName} (${patient.phone}) self-registered.`,
               date: patient.createdAt,
               path: '/patients',
               unread: !readIds.has(`patient-${patient._id}`),
             }];
           })
-        : [];
+         : [];
 
       setNotifications([...reportNotifications, ...appointmentNotifications, ...patientNotifications]
         .sort((a, b) => new Date(b.date) - new Date(a.date))
@@ -140,7 +140,6 @@ const AppLayout = () => {
 
   const unreadCount = notifications.filter((notification) => notification.unread).length;
 
-  // Monitor screen resizing for layout adjustment
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth < 1024;
@@ -156,7 +155,6 @@ const AppLayout = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Format Page Titles dynamically based on pathname
   const getPageTitle = () => {
     const path = location.pathname;
     if (path.startsWith('/dashboard')) return 'Clinic Pulse';
@@ -169,8 +167,8 @@ const AppLayout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-aayu-navy-deep text-white flex overflow-hidden">
-      {/* Sidebar navigation backdrop (mobile overlay) */}
+    <div className="min-h-screen bg-aayu-navy-deep text-aayu-text-primary flex overflow-hidden">
+      {/* Mobile Sidebar overlay */}
       <AnimatePresence>
         {isMobile && isSidebarOpen && (
           <motion.div 
@@ -178,12 +176,12 @@ const AppLayout = () => {
             animate={{ opacity: 0.5 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsSidebarOpen(false)}
-            className="fixed inset-0 bg-black z-40 lg:hidden"
+            className="fixed inset-0 bg-black/60 z-40 lg:hidden"
           />
         )}
       </AnimatePresence>
 
-      {/* Sidebar - Mounted inside layout and persists across navigations */}
+      {/* Sidebar container */}
       <div className="relative z-50">
         <AnimatePresence>
           {isSidebarOpen && (
@@ -192,7 +190,7 @@ const AppLayout = () => {
               animate={isMobile ? { x: 0 } : { width: 256, opacity: 1 }}
               exit={isMobile ? { x: -300 } : { width: 0, opacity: 0 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className={`fixed lg:relative left-0 top-0 h-screen w-64 z-50`}
+              className="fixed lg:relative left-0 top-0 h-screen w-64 z-50"
             >
               <Sidebar onClose={isMobile ? () => setIsSidebarOpen(false) : null} />
             </motion.div>
@@ -200,33 +198,33 @@ const AppLayout = () => {
         </AnimatePresence>
       </div>
 
-      {/* Main Workspace Frame */}
+      {/* Workspace Frame */}
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto h-screen relative">
-        {/* Top Navbar */}
-        <header className="sticky top-0 z-30 w-full glass-card border-b border-white/5 backdrop-blur-md px-6 py-4 flex items-center justify-between">
+        {/* Top Sticky Header */}
+        <header className="sticky top-0 z-30 w-full bg-aayu-surface/90 border-b border-aayu-border backdrop-blur-md px-6 py-4 flex items-center justify-between transition-colors">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="p-2 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors"
+              className="p-2.5 bg-white/[0.03] border border-aayu-border rounded-xl hover:bg-white/[0.08] transition-colors cursor-pointer"
             >
-              <Menu className="w-5 h-5 text-slate-300" />
+              <Menu className="w-4.5 h-4.5 text-aayu-text-secondary" />
             </button>
             
             <div className="hidden sm:block">
-              <h2 className="text-xl font-black text-white tracking-tight uppercase">
+              <h2 className="text-sm font-black text-white tracking-widest uppercase">
                 {getPageTitle()}
               </h2>
             </div>
           </div>
 
-          {/* Quick Find and Medical Admin Status */}
-          <div className="flex items-center gap-6">
-            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-white/[0.02] border border-white/15 rounded-full text-[10px] text-aayu-emerald font-black uppercase tracking-widest">
+          {/* Secure details and profile links */}
+          <div className="flex items-center gap-5">
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-aayu-emerald/5 border border-aayu-emerald/10 rounded-full text-[9px] text-aayu-emerald font-black uppercase tracking-widest">
               <ShieldCheck className="w-3.5 h-3.5" />
-              Secure Doctor Link Active
+              Secure Telemetry Shield Active
             </div>
 
-            {/* Notification Bell */}
+            {/* Notifications panel */}
             <div className="relative">
               <button
                 type="button"
@@ -236,11 +234,11 @@ const AppLayout = () => {
                   setShowNotifications((current) => !current);
                   loadNotifications();
                 }}
-                className="p-2.5 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors relative group"
+                className="p-2.5 bg-white/[0.03] border border-aayu-border rounded-xl hover:bg-white/[0.08] transition-colors relative group cursor-pointer"
               >
-                <Bell className="w-4.5 h-4.5 text-slate-300 group-hover:rotate-12 transition-transform" />
+                <Bell className="w-4.5 h-4.5 text-aayu-text-secondary group-hover:rotate-12 transition-transform" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 min-w-4 h-4 px-1 bg-red-500 rounded-full border border-aayu-navy-deep text-[9px] font-black text-white flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 bg-red-500 rounded-full border border-aayu-surface text-[9px] font-black text-white flex items-center justify-center">
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>
                 )}
@@ -254,18 +252,18 @@ const AppLayout = () => {
                       initial={{ opacity: 0, y: 10, scale: 0.96 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.96 }}
-                      className="absolute right-0 mt-2 w-[min(24rem,calc(100vw-2rem))] glass-card border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden"
+                      className="absolute right-0 mt-3 w-80 bg-aayu-surface border border-aayu-border rounded-2xl shadow-2xl z-50 overflow-hidden p-1.5"
                     >
-                      <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between">
+                      <div className="px-3.5 py-3 border-b border-aayu-border flex items-center justify-between">
                         <div>
-                          <p className="text-xs font-bold text-white">Notifications</p>
-                          <p className="text-[10px] text-slate-500">{unreadCount} unread</p>
+                          <p className="text-xs font-black text-white uppercase tracking-wider">Notifications</p>
+                          <p className="text-[9px] text-aayu-text-secondary font-semibold uppercase mt-0.5">{unreadCount} active alerts</p>
                         </div>
                         {unreadCount > 0 && (
                           <button
                             type="button"
                             onClick={() => markNotificationsRead(notifications.map((notification) => notification.id))}
-                            className="p-2 text-slate-400 hover:text-aayu-emerald transition-colors"
+                            className="p-1.5 text-slate-400 hover:text-aayu-emerald rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
                             title="Mark all as read"
                           >
                             <CheckCheck className="w-4 h-4" />
@@ -273,20 +271,20 @@ const AppLayout = () => {
                         )}
                       </div>
 
-                      <div className="max-h-96 overflow-y-auto">
+                      <div className="max-h-80 overflow-y-auto py-1 space-y-1">
                         {notificationsLoading && notifications.length === 0 ? (
-                          <p className="px-4 py-8 text-center text-xs text-slate-500">Loading notifications...</p>
+                          <p className="px-4 py-8 text-center text-xs text-aayu-text-secondary">Syncing health records...</p>
                         ) : notifications.length > 0 ? (
                           notifications.map((notification) => (
                             <button
                               type="button"
                               key={notification.id}
                               onClick={() => openNotification(notification)}
-                              className={`w-full px-4 py-3 flex items-start gap-3 text-left border-b border-white/5 hover:bg-white/5 transition-colors ${notification.unread ? 'bg-aayu-cyan/[0.04]' : ''}`}
+                              className={`w-full px-3 py-2.5 flex items-start gap-3 text-left rounded-xl hover:bg-white/[0.03] transition-colors cursor-pointer ${notification.unread ? 'bg-aayu-cyan/[0.03]' : ''}`}
                             >
                               <div className={`p-2 rounded-lg shrink-0 ${
                                 notification.type === 'report' 
-                                  ? 'bg-red-500/10 text-red-400' 
+                                  ? 'bg-red-500/10 text-red-500' 
                                   : notification.type === 'patient' 
                                     ? 'bg-aayu-emerald/10 text-aayu-emerald' 
                                     : 'bg-aayu-cyan/10 text-aayu-cyan'
@@ -299,15 +297,15 @@ const AppLayout = () => {
                               </div>
                               <div className="min-w-0 flex-1">
                                 <div className="flex items-start gap-2">
-                                  <p className="text-xs font-bold text-white flex-1">{notification.title}</p>
-                                  {notification.unread && <span className="mt-1 w-2 h-2 rounded-full bg-aayu-cyan shrink-0" />}
+                                  <p className="text-xs font-bold text-white flex-1 leading-tight">{notification.title}</p>
+                                  {notification.unread && <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-aayu-cyan shrink-0" />}
                                 </div>
-                                <p className="text-[10px] text-slate-400 mt-1 leading-relaxed">{notification.detail}</p>
+                                <p className="text-[10px] text-aayu-text-secondary mt-0.5 leading-relaxed font-semibold">{notification.detail}</p>
                               </div>
                             </button>
                           ))
                         ) : (
-                          <p className="px-4 py-8 text-center text-xs text-slate-500">No active alerts or upcoming appointments.</p>
+                          <p className="px-4 py-8 text-center text-xs text-aayu-text-secondary font-medium">All clinical channels quiet.</p>
                         )}
                       </div>
                     </motion.div>
@@ -316,31 +314,31 @@ const AppLayout = () => {
               </AnimatePresence>
             </div>
 
-            {/* Doctor Profile Dropdown */}
+            {/* Profile trigger */}
             <div className="relative">
               <button 
                 onClick={() => {
                   setShowNotifications(false);
                   setShowProfileMenu(!showProfileMenu);
                 }}
-                className="flex items-center gap-3 p-1.5 pr-3 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all active:scale-98"
+                className="flex items-center gap-2.5 p-1 bg-white/[0.03] border border-aayu-border rounded-2xl hover:bg-white/[0.08] transition-all cursor-pointer"
               >
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-aayu-emerald to-aayu-cyan flex items-center justify-center text-white font-black shadow-md text-sm">
-                  {user?.name ? user.name[0] : 'D'}
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-aayu-emerald to-aayu-cyan flex items-center justify-center text-white font-black shadow-md text-xs">
+                  {user?.name ? user.name[0].toUpperCase() : 'A'}
                 </div>
-                <div className="hidden sm:block text-left">
+                <div className="hidden sm:block text-left pr-2.5">
                   <p className="text-xs font-bold text-white leading-none mb-0.5">{user?.name || 'Medical Admin'}</p>
-                  <p className="text-[9px] text-slate-500 font-bold uppercase tracking-wider leading-none">
+                  <p className="text-[8px] text-aayu-text-secondary font-black uppercase tracking-widest leading-none">
                     {user?.role === 'doctor' 
                       ? 'Clinical Lead' 
                       : user?.role === 'receptionist' 
                         ? 'Lobby Staff' 
                         : user?.role === 'patient' 
                           ? 'Patient Portal' 
-                          : 'Admin'}
+                          : 'System Admin'}
                   </p>
                 </div>
-                <ChevronDown className="w-4 h-4 text-slate-400" />
+                <ChevronDown className="w-3.5 h-3.5 text-slate-500 pr-1" />
               </button>
 
               <AnimatePresence>
@@ -351,17 +349,17 @@ const AppLayout = () => {
                       initial={{ opacity: 0, y: 10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      className="absolute right-0 mt-2 w-56 rounded-2xl glass-card border border-white/10 shadow-2xl p-2 z-50 overflow-hidden"
+                      className="absolute right-0 mt-3 w-56 rounded-2xl bg-aayu-surface border border-aayu-border shadow-2xl p-1.5 z-50 overflow-hidden"
                     >
-                      <div className="px-4 py-3 border-b border-white/5">
+                      <div className="px-3.5 py-2.5 border-b border-aayu-border">
                         <p className="text-xs font-bold text-white">{user?.name}</p>
-                        <p className="text-[10px] text-slate-500 font-medium truncate">{user?.email}</p>
+                        <p className="text-[10px] text-aayu-text-secondary font-medium truncate mt-0.5">{user?.email}</p>
                       </div>
-                      <div className="py-1">
+                      <div className="py-1 space-y-0.5">
                         <Link 
                           to="/settings" 
                           onClick={() => setShowProfileMenu(false)}
-                          className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-slate-300 hover:text-white hover:bg-white/5 rounded-xl transition-all"
+                          className="flex items-center gap-2.5 px-3 py-2 text-xs text-aayu-text-secondary hover:text-white hover:bg-white/5 rounded-xl transition-all"
                         >
                           <Settings className="w-4 h-4" />
                           Account Settings
@@ -371,7 +369,7 @@ const AppLayout = () => {
                             setShowProfileMenu(false);
                             logout();
                           }}
-                          className="flex items-center gap-2.5 w-full text-left px-4 py-2.5 text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition-all font-semibold"
+                          className="flex items-center gap-2.5 w-full text-left px-3 py-2 text-xs text-red-500 hover:bg-red-500/10 rounded-xl transition-all font-bold cursor-pointer"
                         >
                           <LogOut className="w-4 h-4" />
                           Logout Session
@@ -385,16 +383,15 @@ const AppLayout = () => {
           </div>
         </header>
 
-        {/* Dynamic Page Workspace Grid */}
+        {/* Workspace dynamic pane */}
         <main className="flex-1 p-6 md:p-8 max-w-7xl mx-auto w-full">
-          {/* Framer motion transition wrapper for page navigation updates */}
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.25, ease: 'easeInOut' }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.22, ease: 'easeInOut' }}
               className="h-full w-full"
             >
               <Outlet />
